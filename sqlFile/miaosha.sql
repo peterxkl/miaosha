@@ -1,24 +1,25 @@
 /*
-Navicat MySQL Data Transfer
+SQLyog 企业版 - MySQL GUI v8.14 
+MySQL - 5.6.37-log : Database - miaosha
+*********************************************************************
+*/
 
-Source Server         : localhost
-Source Server Version : 50637
-Source Host           : localhost:3306
-Source Database       : miaosha
+/*!40101 SET NAMES utf8 */;
 
-Target Server Type    : MYSQL
-Target Server Version : 50637
-File Encoding         : 65001
+/*!40101 SET SQL_MODE=''*/;
 
-Date: 2019-02-08 09:34:53
-*/
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`miaosha` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
 
-SET FOREIGN_KEY_CHECKS=0;
+USE `miaosha`;
 
--- ----------------------------
--- Table structure for item
--- ----------------------------
+/*Table structure for table `item` */
+
 DROP TABLE IF EXISTS `item`;
+
 CREATE TABLE `item` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT '//商品名称',
@@ -29,16 +30,14 @@ CREATE TABLE `item` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- ----------------------------
--- Records of item
--- ----------------------------
-INSERT INTO `item` VALUES ('2', 'ThinkPadX1', '15600', '隐士X1', '25', 'http://img3.imgtn.bdimg.com/it/u=3437380768,1128125133&fm=26&gp=0.jpg');
-INSERT INTO `item` VALUES ('6', 'macBook', '12000', '笔记本', '13', 'http://img0.imgtn.bdimg.com/it/u=2652736280,3152543228&fm=26&gp=0.jpg');
+/*Data for the table `item` */
 
--- ----------------------------
--- Table structure for item_stock
--- ----------------------------
+insert  into `item`(`id`,`title`,`price`,`description`,`sales`,`img_url`) values (2,'ThinkPadX1',15600,'隐士X1',25,'http://img3.imgtn.bdimg.com/it/u=3437380768,1128125133&fm=26&gp=0.jpg'),(6,'macBook',12000,'笔记本',13,'http://img0.imgtn.bdimg.com/it/u=2652736280,3152543228&fm=26&gp=0.jpg');
+
+/*Table structure for table `item_stock` */
+
 DROP TABLE IF EXISTS `item_stock`;
+
 CREATE TABLE `item_stock` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `stock` int(11) NOT NULL DEFAULT '0',
@@ -46,16 +45,14 @@ CREATE TABLE `item_stock` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- ----------------------------
--- Records of item_stock
--- ----------------------------
-INSERT INTO `item_stock` VALUES ('2', '98', '2');
-INSERT INTO `item_stock` VALUES ('6', '99', '6');
+/*Data for the table `item_stock` */
 
--- ----------------------------
--- Table structure for order_info
--- ----------------------------
+insert  into `item_stock`(`id`,`stock`,`item_id`) values (2,98,2),(6,99,6);
+
+/*Table structure for table `order_info` */
+
 DROP TABLE IF EXISTS `order_info`;
+
 CREATE TABLE `order_info` (
   `id` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `userId` int(11) NOT NULL DEFAULT '0' COMMENT '//用户id',
@@ -67,16 +64,14 @@ CREATE TABLE `order_info` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- ----------------------------
--- Records of order_info
--- ----------------------------
-INSERT INTO `order_info` VALUES ('2019020700000400', '34', '2', '9999', '1', '9999', '1');
-INSERT INTO `order_info` VALUES ('2019020800000500', '34', '2', '9999', '1', '9999', '1');
+/*Data for the table `order_info` */
 
--- ----------------------------
--- Table structure for promo
--- ----------------------------
+insert  into `order_info`(`id`,`userId`,`itemId`,`item_price`,`amount`,`order_price`,`promo_id`) values ('2019020700000400',34,2,9999,1,9999,1),('2019020800000500',34,2,9999,1,9999,1);
+
+/*Table structure for table `promo` */
+
 DROP TABLE IF EXISTS `promo`;
+
 CREATE TABLE `promo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `promo_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT '//秒杀活动商品名称',
@@ -87,15 +82,14 @@ CREATE TABLE `promo` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- ----------------------------
--- Records of promo
--- ----------------------------
-INSERT INTO `promo` VALUES ('1', 'ThinkPadX2抢购', '2019-02-07 19:06:00', '2', '9999', '2019-02-20 00:00:00');
+/*Data for the table `promo` */
 
--- ----------------------------
--- Table structure for sequence_info
--- ----------------------------
+insert  into `promo`(`id`,`promo_name`,`start_time`,`item_id`,`promo_item_price`,`end_time`) values (1,'ThinkPadX2抢购','2019-02-07 19:06:00',2,9999,'2019-02-20 00:00:00');
+
+/*Table structure for table `sequence_info` */
+
 DROP TABLE IF EXISTS `sequence_info`;
+
 CREATE TABLE `sequence_info` (
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `current_value` int(11) NOT NULL DEFAULT '0',
@@ -103,15 +97,14 @@ CREATE TABLE `sequence_info` (
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- ----------------------------
--- Records of sequence_info
--- ----------------------------
-INSERT INTO `sequence_info` VALUES ('order_info', '6', '1');
+/*Data for the table `sequence_info` */
 
--- ----------------------------
--- Table structure for user_info
--- ----------------------------
+insert  into `sequence_info`(`name`,`current_value`,`step`) values ('order_info',6,1);
+
+/*Table structure for table `user_info` */
+
 DROP TABLE IF EXISTS `user_info`;
+
 CREATE TABLE `user_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
@@ -124,17 +117,14 @@ CREATE TABLE `user_info` (
   UNIQUE KEY `telphone_unique_index` (`telphone`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- ----------------------------
--- Records of user_info
--- ----------------------------
-INSERT INTO `user_info` VALUES ('1', 'hongjun500', '1', '21', '17607120963', 'byWechat', '');
-INSERT INTO `user_info` VALUES ('33', 'we', '2', '24', '1321321', 'byphone', '');
-INSERT INTO `user_info` VALUES ('34', '1', '1', '1', '1', 'byphone', '');
+/*Data for the table `user_info` */
 
--- ----------------------------
--- Table structure for user_password
--- ----------------------------
+insert  into `user_info`(`id`,`name`,`gender`,`age`,`telphone`,`register_mode`,`third_party_id`) values (1,'hongjun500',1,21,'17607120963','byWechat',''),(33,'we',2,24,'1321321','byphone',''),(34,'1',1,1,'1','byphone','');
+
+/*Table structure for table `user_password` */
+
 DROP TABLE IF EXISTS `user_password`;
+
 CREATE TABLE `user_password` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `encrpt_password` varchar(128) COLLATE utf8_unicode_ci NOT NULL COMMENT '//密文密码',
@@ -142,9 +132,11 @@ CREATE TABLE `user_password` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- ----------------------------
--- Records of user_password
--- ----------------------------
-INSERT INTO `user_password` VALUES ('1', 'gregfergiujhvfdsnh', '1');
-INSERT INTO `user_password` VALUES ('15', 'hgtDJlJQT6YPjalFOY4g3g==', '33');
-INSERT INTO `user_password` VALUES ('16', 'xMpCOKC5I4INzFCab3WEmw==', '34');
+/*Data for the table `user_password` */
+
+insert  into `user_password`(`id`,`encrpt_password`,`user_id`) values (1,'gregfergiujhvfdsnh',1),(15,'hgtDJlJQT6YPjalFOY4g3g==',33),(16,'xMpCOKC5I4INzFCab3WEmw==',34);
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

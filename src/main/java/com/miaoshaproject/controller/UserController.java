@@ -67,6 +67,8 @@ public class UserController extends BaseController{
 
         //验证手机号和对应的otpCode相符合
         String inSessionOtpCode = (String) this.httpServletRequest.getSession().getAttribute(telphone);
+        System.out.println(otpCode);
+        System.out.println(inSessionOtpCode);
         if(!com.alibaba.druid.util.StringUtils.equals(otpCode,inSessionOtpCode)){  //此处使用类库中的equals的方法是因为该类库中的方法已经做了判空处理
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"短信验证码不符合");
         }
@@ -93,6 +95,7 @@ public class UserController extends BaseController{
         String pwd= base64Encoder.encode(md5.digest(str.getBytes("UTF-8")));
         return pwd;
     }
+
     //用户获取opt短信接口
     @RequestMapping(value = "/getotp",method ={RequestMethod.POST},consumes = {CONTEND_TYPE_FROMED})
     @ResponseBody

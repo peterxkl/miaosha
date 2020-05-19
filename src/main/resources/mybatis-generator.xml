@@ -11,7 +11,7 @@
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://127.0.0.1:3306/miaosha"
                         userId="root"
-                        password="0110">
+                        password="123456">
         </jdbcConnection>
 
         <javaTypeResolver >
@@ -30,17 +30,7 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.miaoshaproject.dao"  targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
-        <!--
-        <table tableName="user_info" domainObjectName="UserDO" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false">
-        </table>
-        <table tableName="user_password" domainObjectName="UserPasswordDO" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false">
-        </table>
-        -->
-        <table tableName="promo" domainObjectName="PromoDO" enableCountByExample="false"
+        <table tableName="stock_log" domainObjectName="StockLogDO" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false">
         </table>

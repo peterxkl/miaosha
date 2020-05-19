@@ -2,8 +2,10 @@ package com.miaoshaproject.service.impl;
 
 import com.miaoshaproject.dao.OrderDOMapper;
 import com.miaoshaproject.dao.SequenceDOMapper;
+import com.miaoshaproject.dao.StockLogDOMapper;
 import com.miaoshaproject.dataproject.OrderDO;
 import com.miaoshaproject.dataproject.SequenceDO;
+import com.miaoshaproject.dataproject.StockLogDO;
 import com.miaoshaproject.error.BusinessException;
 import com.miaoshaproject.error.EmBusinessError;
 import com.miaoshaproject.service.ItemService;
@@ -17,16 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
-/**
- * @author hongjun500
- * @date 2019/2/5 17:16
- */
 @Service
 public class OrderServiceImpl implements OrderService {
     @Autowired
@@ -41,16 +40,18 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private SequenceDOMapper sequenceDOMapper;
 
+    @Autowired
+    private StockLogDOMapper stockLogDOMapper;
 
     @Override
     @Transactional
-    public OrderModel createOrder(Integer userId,Integer itemId,Integer promoId, Integer amount) throws BusinessException {
+    public OrderModel createOrder(Integer userId,Integer itemId,Integer promoId, Integer amount, String stockLogId) throws BusinessException {
         //1校验下单状态，下单的商品是否存在，下单的用户是否合法，购买数量是否正确
-        ItemModel itemModel=itemService.getItemById(itemId);
+        ItemModel itemModel=itemService.getItemModelByIdInCache(itemId);
         if(itemModel==null){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"商品信息不存在");
         }
-        UserModel userModel=userService.getUserById(userId);
+        UserModel userModel=userService.getUserByIdInCache(userId);
         if(userModel==null){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"用户信息不存在");
         }
@@ -99,12 +100,28 @@ public class OrderServiceImpl implements OrderService {
 
         //加上商品的销量
         itemService.increaseSales(itemId,amount);
+
+//        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+//            @Override
+//            public void afterCommit() {//该方法会在最近一个@Transactional注解的commit之后执行
+//                itemService.asyncDecreaseStock(itemId, amount);  //这一步其实还有可能失败，也需要回滚库存的，但是在这个方法里面做不了
+//            }
+//        });
+
+        //设置库存流水状态为成功
+        StockLogDO stockLogDO = stockLogDOMapper.selectByPrimaryKey(stockLogId);
+        if (stockLogDO == null) {
+            new BusinessException(EmBusinessError.UNKNOWN_ERROR);
+        }
+        stockLogDO.setStatus(2);
+        stockLogDOMapper.updateByPrimaryKeySelective(stockLogDO);
+
         //4返回前端
         return orderModel;
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    private String generatorOrderNo(){
+    public String generatorOrderNo(){
         //订单号有 16 位
         StringBuilder stringBuilder=new StringBuilder();
         //前 8 位为时间信息，年月日
